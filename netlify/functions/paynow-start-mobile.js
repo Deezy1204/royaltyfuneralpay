@@ -120,8 +120,19 @@ function buildPayment(payload = {}) {
   };
 }
 
-function buildRequestPayload(body) {
-  return body && typeof body === "object" ? body : {};
+function buildRequestPayload(body, queryParams) {
+  const payload = body && typeof body === "object" ? { ...body } : {};
+
+  // Merge URL query parameters, with body taking precedence
+  if (queryParams) {
+    for (const [key, value] of Object.entries(queryParams)) {
+      if (!(key in payload) && value) {
+        payload[key] = value;
+      }
+    }
+  }
+
+  return payload;
 }
 
 exports.handler = async (event, context) => {
@@ -142,7 +153,15 @@ exports.handler = async (event, context) => {
   }
 
   try {
-    const payload = buildRequestPayload(safeJsonParse(event.body, {}));
+    const queryParams = {};
+    if (event.rawQuery) {
+      const searchParams = new URLSearchParams(event.rawQuery);
+      for (const [key, value] of searchParams.entries()) {
+        queryParams[key] = value;
+      }
+    }
+
+    const payload = buildRequestPayload(safeJsonParse(event.body, {}), queryParams);
     const phone = typeof payload.phone === "string" && payload.phone.trim()
       ? payload.phone.trim()
       : config.defaultPhone;
