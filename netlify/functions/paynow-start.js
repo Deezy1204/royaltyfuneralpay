@@ -65,10 +65,7 @@ function normalizeItems(inputItems) {
 function getDefaultItems() {
   const envItems = getEnv("PAYMENT_ITEMS_JSON");
   if (!envItems) {
-    return [
-      { name: "Bananas", amount: 2.5 },
-      { name: "Apples", amount: 3.4 },
-    ];
+    return [];
   }
   const parsedItems = safeJsonParse(envItems);
   return normalizeItems(parsedItems);
@@ -106,7 +103,10 @@ function buildPayment(payload = {}) {
     ? payload.authEmail.trim()
     : config.defaultAuthEmail;
 
-  const items = normalizeItems(payload.items || config.defaultItems);
+  if (!payload.items || !Array.isArray(payload.items) || payload.items.length === 0) {
+    throw new Error("At least one payment item is required");
+  }
+  const items = normalizeItems(payload.items);
   const payment = paynow.createPayment(reference, authEmail || undefined);
 
   for (const item of items) {
