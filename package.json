@@ -1,0 +1,9 @@
+{  
+  "scripts": {
+    "start": "node index.js",
+    "lint": "eslint"
+  },
+  "dependencies": {
+    "paynow": "^2.2.2"
+  }
+}
