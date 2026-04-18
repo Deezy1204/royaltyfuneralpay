@@ -4,7 +4,6 @@ const DEFAULT_INTEGRATION_ID = "24223";
 const DEFAULT_INTEGRATION_KEY = "2336dda5-d3d2-4a1a-81a7-f6da364aedec";
 const DEFAULT_PORT = Number.parseInt(process.env.PORT || "3000", 10);
 const DEFAULT_EMAIL = "royaltyzw.tech@gmail.com";
-const TEST_MODE_INTEGRATION_IDS = new Set([DEFAULT_INTEGRATION_ID]);
 
 function getEnv(name, fallback = "") {
   const value = process.env[name];
@@ -103,12 +102,9 @@ function buildPayment(payload = {}) {
     ? payload.reference.trim()
     : config.defaultReference;
 
-  const requestedAuthEmail = typeof payload.authEmail === "string" && payload.authEmail.trim()
+  const authEmail = typeof payload.authEmail === "string" && payload.authEmail.trim()
     ? payload.authEmail.trim()
     : config.defaultAuthEmail;
-  const authEmail = TEST_MODE_INTEGRATION_IDS.has(config.integrationId)
-    ? config.defaultAuthEmail
-    : requestedAuthEmail;
 
   const items = normalizeItems(payload.items || config.defaultItems);
   const payment = paynow.createPayment(reference, authEmail || undefined);
