@@ -5,7 +5,6 @@ const { Paynow } = require("paynow");
 const DEFAULT_INTEGRATION_ID = "24223";
 const DEFAULT_INTEGRATION_KEY = "2336dda5-d3d2-4a1a-81a7-f6da364aedec";
 const DEFAULT_PORT = Number.parseInt(process.env.PORT || "3000", 10);
-const DEFAULT_EMAIL = "royaltyzw.tech@gmail.com";
 const TEST_MODE_INTEGRATION_IDS = new Set([DEFAULT_INTEGRATION_ID]);
 
 
@@ -119,7 +118,7 @@ function buildRuntimeConfig() {
     integrationId: getEnv("PAYNOW_INTEGRATION_ID", DEFAULT_INTEGRATION_ID),
     integrationKey: getEnv("PAYNOW_INTEGRATION_KEY", DEFAULT_INTEGRATION_KEY),
     defaultReference: getEnv("PAYMENT_REFERENCE", "Invoice 35"),
-    defaultAuthEmail: getEnv("PAYMENT_AUTH_EMAIL", DEFAULT_EMAIL),
+    defaultAuthEmail: getEnv("PAYMENT_AUTH_EMAIL", ""),
     defaultPhone: getEnv("PAYMENT_PHONE", ""),
     defaultMethod: getEnv("PAYMENT_METHOD", "web").toLowerCase(),
     defaultItems: getDefaultItems(),
