@@ -108,6 +108,11 @@ function buildPayment(payload = {}) {
   }
   const items = normalizeItems(payload.items);
   const payment = paynow.createPayment(reference, authEmail || undefined);
+  const itemSummary = items
+    .map((item) => `${item.name}: $${item.amount.toFixed(2)}`)
+    .join(" | ");
+
+  payment.info = () => itemSummary;
 
   for (const item of items) {
     payment.add(item.name, item.amount);

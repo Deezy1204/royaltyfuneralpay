@@ -174,6 +174,11 @@ exports.handler = async (event, context) => {
     }
 
     const { payment, reference, authEmail, items } = buildPayment(payload);
+    const itemSummary = items
+      .map((item) => `${item.name}: $${item.amount.toFixed(2)}`)
+      .join(" | ");
+
+    payment.info = () => itemSummary;
 
     if (!authEmail) {
       throw new Error("A valid authEmail is required for mobile payments");
